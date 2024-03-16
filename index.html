@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> RPS Game
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <script src="rpsFunctionLibrary.js"></script>
+    <script src="classes/RPS_GAME.js"></script>
+    <script src="classes/Round.js"></script>
+    <script src="classes/Turn.js"></script>
+    <script src="classes/Player.js"></script>
+    <script src="classes/Shape.js"></script>
+    <script src="classes/Rock.js"></script>
+    <script src="classes/Paper.js"></script>
+    <script src="classes/Scissors.js"></script>
+    <script src="classes/generalimg.js"></script>
+
+  
+    <style> 
+      #btnNext{
+        text-align-last: center;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      #btnStartGame{
+        text-align-last: center;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      #btnbackGame{
+        text-align-last: center;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      #h1{
+        text-align-last: center;
+        color: white;
+        background-color: black;
+        background-image: linear-gradient(to bottom right, rgb(8, 8, 8), rgb(119, 119, 117));
+        height: 100px;
+      }
+      #btnPlayNextRound{
+        text-align-last: center;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      #btnDisplayWinner{
+        text-align-last: center;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      #btnNewGame{
+        text-align-last: center;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      #btnTieBreaker{
+        text-align-last: center;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      body{
+        background-image: url(images/General2.png);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center;
+        object-fit: contain;
+      }
+      #alertLookAway{
+        text-align-last: center;
+        display: block;
+        margin-right: 35%;
+        margin-left: 35%;
+        border-radius: 3%;
+        background-color: black;
+        background-image: linear-gradient(to bottom left, rgb(8, 8, 8), rgb(26, 74, 177));
+        font-size: 3vh;
+      }
+     
+    </style> 
+    
+    <style>
+      #turnPlayerName{
+        color: rgb(245, 27, 27);
+        text-decoration: black;
+      }
+      #roundCounter{
+        color: black;
+      }
+      #totalRounds{
+        color: red;
+      }
+      #player1Score{
+        font-size: 5vh;
+        color: black;
+      }
+      #player2Score{
+        font-size: 5vh;
+        color: black;
+      }
+      #player1Name{
+        color: rgb(17, 17, 131);
+        font-size: 3vh;
+      }
+      #player2Name{
+        color: rgb(17, 17, 131);
+        font-size: 3vh;
+      }
+      #roundWinnerName{
+        text-align-last: center;
+        display: block;
+        margin-right: 35%;
+        margin-left: 35%;
+        border-radius: 3%;
+      }
+      #gameWinnerName{
+        text-align-last: center;
+        display: block;
+        margin-right: 35%;
+        margin-left: 35%;
+        border-radius: 5%;
+      }
+    </style>
+
+  </head>
+  <body onload="preLoadValues()">
+  
+    <header >
+      <a href="index.html" class="text-decoration-none text-light">
+        <br>
+        <h1 id="h1">Rock Paper or Scissors Game </h1>
+        <br>
+      </a>      
+    </header>
+    <main>
+      <section id="roundCounter" class="container my-3 d-none">
+        <div class="row position-relative">
+          <div class="col-6">
+            <h4 class="position-absolute top-50 start-50 translate-middle"><strong>Round <span class="currentRound"></span></strong> of <strong><span id="totalRounds"></span></strong></h4>
+          </div>
+          <div class="col-6 d-flex justify-content-end">
+            <input type="button" class="btn btn-danger text-light" id="btnQuitGame" value="EXIT " onclick="location.reload()">
+          </div>
+        </div>        
+      </section>
+
+      <section id="sectionScore" class="container col-md-3 d-none">
+        <h5 class="text-center"><strong>SCORE</strong></h5>
+        <div class="row">
+          <div class="col-md-6">
+            <strong>
+              <span class="player1Name" id="player1Name"></span>: 
+              <span id="player1Score"></span>
+            </strong>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <strong>
+              <span class="player2Name" id="player2Name"></span>: 
+              <span id="player2Score"></span>
+            </strong>
+          </div>
+        </div>
+      </section>
+
+      <div class="divNumPlayers container col-md-3 d-block">
+        <label for="formNumPlayers" class="mt-3">
+          <p style="text-align: center;" ><strong><em>Select Number of Players</em></strong></p> 
+        </label>
+        <form id="formNumPlayers" class="mx-auto col-10 p-3 shadow rounded">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="inputNumPlayer" value="1" checked>
+            <label class="form-check-label" for="inputOnePlayer">
+              <strong>1 PLAYER</strong>
+            </label>
+          </div>
+          <div class="form-check mt-3">
+            <input class="form-check-input" type="radio" name="inputNumPlayer" value="2">
+            <label class="form-check-label" for="inputTwoPlayers">
+              <strong>2 PLAYERS</strong>
+            </label>
+          </div>
+          <br>
+          <input type="button" class="btn btn-outline-primary" id="btnNext" value="CONTINUE">
+        </form>
+        <small class="text-center d-block my-3"><strong><a href="Howtoplay.pdf" target="_blank">How to play?</a></strong></small>
+        
+      </div>
+      
+      <form id="formPlayerNameAndRounds" class="mx-auto col-md-3 p-3 shadow rounded d-none">
+        <div class="mb-3">
+          <label class="form-label" for="inputPlayer1Name">
+            <strong>Enter player 1 name:</strong>
+          </label>
+          <input class="form-control" type="text" id="inputPlayer1Name">
+        </div>
+        <div class="mb-3 d-block" id="textBoxPlayer2">
+          <label class="form-label" for="inputPlayer2Name">
+            <strong>Enter player 2 name:</strong>
+          </label>
+          <input class="form-control" type="text" id="inputPlayer2Name">
+        </div>
+        <label class="form-check-label mb-3">
+          <strong>Select number of rounds:</strong>
+        </label>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="inputNumRounds" value="1" checked>
+          <label class="form-check-label" for="inputOnePlayer">
+            <strong>ONE</strong>
+          </label>
+          
+        </div>
+        <div class="form-check mt-3">
+          <input class="form-check-input" type="radio" name="inputNumRounds" value="3">
+          <label class="form-check-label" for="inputTwoPlayers">
+            <strong>THREE</strong>
+          </label>
+        </div>
+        <div class="form-check mt-3">
+          <input class="form-check-input" type="radio" name="inputNumRounds" value="5">
+          <label class="form-check-label" for="inputTwoPlayers">
+            <strong>FIVE</strong>
+          </label>
+        </div>
+        <div class="form-check mt-3">
+          <input class="form-check-input" type="radio" name="inputNumRounds" value="7">
+          <label class="form-check-label" for="inputTwoPlayers">
+            <strong>SEVEN</strong>
+          </label>
+        </div>
+        <input type="button" class="btn btn-outline-primary" id="btnStartGame" value="START GAME">
+        <br>
+        <input type="button" class="btn btn-outline-secondary" id="btnbackGame" value="BACK " onclick="location.reload()">
+      </form>
+
+      <section id="sectionSelectAShape" class="container my-3 d-none">
+        <div class="p-3 mb-2 bg-black text-white" role="alert" id="alertLookAway">
+          <strong><span id="playerToLookAway"></span></strong>, please look away.
+        </div>
+        
+        <h4 class="text-center">
+          <span id="turnPlayerName"></span> Turn</h4>
+        <h5 class="text-center">Select a shape:</h5>
+
+        
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <button id="btnRock" class="p-1 rounded bg-muted btnShape">
+              <div class="card">
+                <img class="card-img-top" alt="..." id="imgRock">
+                <div class="card-body">
+                  <strong><h5 class="card-title text-center">ROCK</h5></strong>
+                </div>
+              </div>
+            </button>
+
+          </div>
+          <div class="col">
+            <button id="btnPaper" class="p-1 rounded bg-muted btnShape">
+              <div class="card">
+                <img class="card-img-top" alt="..." id="imgPaper">
+                <div class="card-body">
+                  <strong><h5 class="card-title text-center">PAPER</h5></strong>
+                </div>
+              </div>
+            </button>            
+          </div>
+          <div class="col">
+            <button id="btnScissors" class="p-1 rounded bg-muted btnShape">
+              <div class="card">
+                <img class="card-img-top" alt="..." id="imgScissors">
+                <div class="card-body">
+                  <strong><h5 class="card-title text-center">SCISSORS</h5></strong>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+              
+      </section>
+      
+      <section id="roundWinner" class="container my-3 d-none">
+        <h5 class="text-center">Winner of this round <span ></span>:</h5>
+        <span><imput class="alert alert-primary" role="alert" id="roundWinnerName"></imput></span>
+       
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          <div class="col">
+              <p class="text-center"><strong><span class="player1Name"></span> selected:</strong></p>
+              <div class="card col-md-6 mx-auto">
+                <img id="player1SelectedShapeImage" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <strong><h5 class="card-title text-center"><span id="player1SelectedShapeName"></span></h5></strong>
+                </div>
+              </div>
+          </div>
+          <div class="col">
+            <p class="text-center"><strong><span class="player2Name"></span>  selected:</strong></p>
+              <div class="card col-md-6 mx-auto">
+                <img id="player2SelectedShapeImage" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <strong><h5 class="card-title text-center"><span id="player2SelectedShapeName"></span></h5></strong>
+                </div>
+              </div>        
+          </div>
+        </div>
+      
+        <input type="button" class="btn btn-outline-primary" id="btnPlayNextRound" value="PLAY NEXT ROUND">
+        <input type="button" class="btn btn-outline-primary" id="btnDisplayWinner" value="DISPLAY WINNER">
+      </section>
+
+      <section id="sectionGameWinner" class="container my-3 d-none">
+        <h3 class="text-center"><strong>GAME WINNER:</strong></h3>
+        <span><imput class="alert alert-primary" role="alert" id="gameWinnerName"></imput></span>
+               <br>
+        <h2 class="text-center d-block" id="gameOverText">
+          <strong> GAME OVER! <br> </strong></h2>
+        <br><br>
+        <input type="button" class="btn btn-outline-primary" id="btnNewGame" value="NEW GAME" onclick="location.reload()">
+        <input type="button" class="btn btn-outline-primary" id="btnTieBreaker" value="TIEBREAKER">
+      </section> 
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script>
+                              
+      const btnStartGame = document.querySelector('#btnStartGame');
+      const btnShape = document.querySelectorAll('.btnShape');
+      const btnPlayNextRound = document.querySelector('#btnPlayNextRound');
+      const btnDisplayWinner = document.querySelector('#btnDisplayWinner');
+      const btnNewGame = document.querySelector('#btnNewGame');
+      const btnTieBreaker = document.querySelector('#btnTieBreaker');
+      const gameOverText = document.querySelector('#gameOverText');
+      const roundWinner = document.querySelector('#roundWinner');
+      const sectionSelectAShape = document.querySelector('#sectionSelectAShape');
+      const sectionGameWinner = document.querySelector('#sectionGameWinner');
+      const gameWinnerName = document.querySelector('#gameWinnerName');
+      const player1Name = document.querySelectorAll('.player1Name');
+      const player2Name = document.querySelectorAll('.player2Name');
+            
+      let numPlayers = 0;
+      let player1 = '';
+      let player2 = '';
+      let rpsGame = '';
+                  
+      btnNext.addEventListener('click', function(){
+        numPlayers = getNumPlayers();
+        prepareGame(numPlayers);        
+      });
+
+      btnStartGame.addEventListener('click', function(){   
+        const computerPlayerName = 'Computer';
+        const formPlayerNameAndRounds = document.querySelector('#formPlayerNameAndRounds');
+        const inputNumRoundsRadioButtonGroup = document.querySelectorAll("input[name=inputNumRounds]");
+        const inputPlayer1Name = document.querySelector('#inputPlayer1Name').value;
+        const inputPlayer2Name = document.querySelector('#inputPlayer2Name').value;        
+        const numRounds = Number(getRadioButtonValue(inputNumRoundsRadioButtonGroup));        
+
+        toggleDisplayElement(formPlayerNameAndRounds);                                  
+
+        player1 = new Player(inputPlayer1Name);
+        player2 = numPlayers===2 
+                      ? new Player(inputPlayer2Name)
+                      : new Player(computerPlayerName);                                
+
+        rpsGame = new RPS_GAME(player1, player2, numRounds); 
+        
+        for(let index = 1; index<player1Name.length; index++)
+        {
+          player1Name[index].innerHTML = player1.playerName;
+        }
+
+        for(let index = 1; index<player2Name.length; index++)
+        {
+          player2Name[index].innerHTML = player2.playerName;
+        }
+      });
+      
+      let currentRoundNumber = 0;
+      let currentRound = '';
+      let currentTurn = '';
+
+      for(let index = 0; index<btnShape.length; index++){        
+        btnShape[index].addEventListener('click', function(){ 
+                    
+          currentRoundNumber = rpsGame.currentRoundNumber;          
+          currentRound = rpsGame.arrayRounds[currentRoundNumber-1];
+
+        
+          if(currentRound.currentTurnNumber===0)
+          {
+            
+            currentTurn = currentRound.arrayTurns[currentRound.currentTurnNumber];
+            currentTurn.selectedShape = currentTurn.playerTurn.selectShape(btnShape[index], rpsGame);
+            
+             
+            ++currentRound.currentTurnNumber;
+            const isPlayer1Turn = currentRound.currentTurnNumber === 0;
+            currentTurn.prepareTurn(player2
+                                    ,player1
+                                    ,isPlayer1Turn
+                                    ,rpsGame.rock
+                                    ,rpsGame.paper
+                                    ,rpsGame.scissors
+                                    );
+             
+            
+            if(numPlayers===1 && currentRound.currentTurnNumber===1)
+            {
+              const randomIndex = Math.abs(Math.ceil((Math.random()*3)-1));
+              currentTurn = currentRound.arrayTurns[currentRound.currentTurnNumber];
+              currentTurn.selectedShape = currentTurn.playerTurn.selectShape(btnShape[randomIndex], rpsGame); 
+              displayRoundWinner(rpsGame);
+            }    
+          }
+          else
+          {
+                                          
+            currentTurn = currentRound.arrayTurns[currentRound.currentTurnNumber];
+            currentTurn.selectedShape = currentTurn.playerTurn.selectShape(btnShape[index], rpsGame);            
+            displayRoundWinner(rpsGame);                        
+
+            
+            currentRound.currentTurnNumber = 0;
+          }
+
+        });
+      }
+      
+      btnPlayNextRound.addEventListener('click', function(){
+      
+        toggleDisplayElement(roundWinner);
+
+      
+        rpsGame.playRound(++rpsGame.currentRoundNumber);
+                
+      });
+      
+      btnDisplayWinner.addEventListener('click', function(){   
+        const drawMessage = 'Draw!';     
+        gameWinnerName.innerHTML = rpsGame.getGameWinner();
+
+       
+        if(rpsGame.getGameWinner()===drawMessage)
+        {
+          hideElement(btnNewGame);
+          hideElement(gameOverText);
+          displayElement(btnTieBreaker);
+        }
+        else
+        {
+          displayElement(btnNewGame);
+          displayElement(gameOverText);
+          hideElement(btnTieBreaker);
+        }
+        
+        hideElement(roundWinner);
+        toggleDisplayElement(sectionGameWinner);
+      });
+
+      btnTieBreaker.addEventListener('click', function(){
+        const numRounds = 1;
+        hideElement(sectionGameWinner);
+
+       
+        player1.score = 0;
+        player2.score = 0;
+
+        
+        rpsGame = new RPS_GAME(player1, player2, numRounds); 
+      });
+
+    </script>
+
+  </body>
+</html>
